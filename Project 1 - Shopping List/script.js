@@ -74,9 +74,11 @@ const removeItem = (e) => {
 
 //function that removes all items in the list
 const clearItems = () => {
-    //while the item list has children, remove them
-    while(itemList.firstChild){
-        itemList.removeChild(itemList.firstChild)
+    if(confirm("Did you want to remove all items?")){
+         //while the item list has children, remove them
+        while(itemList.firstChild){
+            itemList.removeChild(itemList.firstChild)
+        }
     }
     checkUI();
 }
@@ -90,7 +92,7 @@ const checkUI = () => {
     //if there aren't any items in the list then
     //there is no need for a clear button or an item filter
     //so hide them, other wise we display them
-    if(item.length === 0){
+    if(items.length === 0){
         clearButton.style.display = "none";
         itemFilter.style.display = "none";
     } else{
@@ -105,3 +107,4 @@ itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem)
 //listening for the clear all button
 clearButton.addEventListener("click", clearItems)
+checkUI();
