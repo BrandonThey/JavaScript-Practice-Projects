@@ -65,7 +65,10 @@ const removeItem = (e) => {
     if(e.target.parentElement.classList.contains("remove-item")){
         //if the item tab has a remove button then we can remove
         //the item
-        e.target.parentElement.parentElement.remove();
+        if(confirm("Did you want to remove this item?")){
+            e.target.parentElement.parentElement.remove();
+            checkUI();
+        }
     }
 }
 
