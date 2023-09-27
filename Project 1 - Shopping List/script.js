@@ -3,7 +3,9 @@
 const itemForm = document.getElementById("item-form");
 const itemInput = document.getElementById("item-input");
 const itemList = document.getElementById("item-list");
-const clearButton = document.getElementById("clear")
+const clearButton = document.getElementById("clear");
+//variable for the item filter
+const itemFilter = document.getElementById("filter");
 
 //Function to add items to the list
 const addItem = (e) =>{
@@ -30,6 +32,9 @@ const addItem = (e) =>{
 
     //appending the list item to the items list
     itemList.appendChild(listItem)
+    
+    //after adding a child to the items list, we want to check the ui again
+    checkUI();
 
     //resetting the item input
     itemInput.value="";
@@ -69,6 +74,24 @@ const clearItems = () => {
     //while the item list has children, remove them
     while(itemList.firstChild){
         itemList.removeChild(itemList.firstChild)
+    }
+}
+
+//function that occasionally checks the ui for items
+//to conditionally render certain elements
+const checkUI = () => {
+    //variable to hold all the list items in the list
+    const items = itemList.querySelectorAll("li");
+    
+    //if there aren't any items in the list then
+    //there is no need for a clear button or an item filter
+    //so hide them, other wise we display them
+    if(item.length === 0){
+        clearButton.style.display = "none";
+        itemFilter.style.display = "none";
+    } else{
+        clearButton.style.display = "block";
+        itemFilter.style.display = "block";
     }
 }
 
