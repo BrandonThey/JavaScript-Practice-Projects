@@ -78,6 +78,7 @@ const clearItems = () => {
     while(itemList.firstChild){
         itemList.removeChild(itemList.firstChild)
     }
+    checkUI();
 }
 
 //function that occasionally checks the ui for items
