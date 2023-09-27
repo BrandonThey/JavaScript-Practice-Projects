@@ -37,6 +37,31 @@
             </div>
         </form>
 
+        <!--Filter input that will filter items of the shopping list-->
+        <div class="filter">
+            <input 
+                type="text"
+                class="form-input-filter"
+                id="filter"
+                placeholder="Filter Items"
+            />
+        </div>
+
+        <!--Item list that will display the added items, currently hardcoded for 
+        example purposes-->>
+        <ul id="item-list" class="items">
+            <li>
+                Apples
+                <button class="remove-item btn-link text-red">
+                    <i class="fa-solid fa-xmark"></i> 
+                </button>
+            </li>
+        </ul>
+
+        <!--clear button that clears all items from the list-->
+        <button id="clear" class="btn-clear">Clear All Items</button>
     </div>
+
+    <scipt scr="script.js"></scipt>
 </body>
 </html>
