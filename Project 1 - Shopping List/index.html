@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--Container div that will wrap the whole application-->
+    <div class = "container">
+        
+        <!--Header that contains the shopping list header and logo-->
+        <header>
+            <h1>Shopping List</h1>
+        </header>
+
+        <!--A form that will take new user items and add them to the list-->
+        <form id="item-form">
+            <!--Form input-->
+            <div class="form-control">
+                <input 
+                    type="text"
+                    class="form-imput"
+                    id="item-input"
+                    name="item"
+                    placeholder="Enter Item"
+                />
+            </div>
+            
+            <!--Form submit button-->
+            <div class="form-control">
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-plus"></i> Add Item
+                </button>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>
