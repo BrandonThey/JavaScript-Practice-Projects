@@ -20,8 +20,12 @@ const onAddItemSubmit = (e) =>{
         alert("Please add an item");
         return;
     }
-    
+
+    //create dom element
     addItemToDOM(newItem);
+    
+    //add item to local storage
+    addItemToStorage(newItem);
     
     //after adding a child to the items list, we want to check the ui again
     checkUI();
@@ -48,7 +52,25 @@ const addItemToDOM = (item) => {
 //Function to add items to local storage so our items
 //persist on page reload
 const addItemToStorage = (item) => {
-    
+    //array variable to hold items from the local stroage
+    let itemsFromStorage;
+
+    //checking and getting anything in the local storage
+    //if local storage is empty then our array variable is also empty
+    if(localStorage.getItem("items") === null){
+        itemsFromStorage = []
+    } else{
+        //getting items from storage, since local storage is a json
+        //string we must use the parse method to parse that string
+        itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+    }
+
+    //adding our new item
+    itemsFromStorage.push(item);
+
+    //convert our new storage array to a JSON String and set them
+    //into the local storage, with the key of "items"
+    localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
 //function that creates a item remove button
