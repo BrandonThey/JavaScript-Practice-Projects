@@ -26,7 +26,7 @@ const onAddItemSubmit = (e) =>{
     
     //add item to local storage
     addItemToStorage(newItem);
-    
+
     //after adding a child to the items list, we want to check the ui again
     checkUI();
 
@@ -52,18 +52,7 @@ const addItemToDOM = (item) => {
 //Function to add items to local storage so our items
 //persist on page reload
 const addItemToStorage = (item) => {
-    //array variable to hold items from the local stroage
-    let itemsFromStorage;
-
-    //checking and getting anything in the local storage
-    //if local storage is empty then our array variable is also empty
-    if(localStorage.getItem("items") === null){
-        itemsFromStorage = []
-    } else{
-        //getting items from storage, since local storage is a json
-        //string we must use the parse method to parse that string
-        itemsFromStorage = JSON.parse(localStorage.getItem("items"));
-    }
+    const itemsFromStorage = getItemsFromStorage();
 
     //adding our new item
     itemsFromStorage.push(item);
@@ -88,6 +77,24 @@ const createIcon = (classes) => {
     const icon = document.createElement("i");
     icon.className = classes;
     return icon;
+}
+
+//function that will retrieve items from the local storage and returns them
+const getItemsFromStorage = () => {
+    //array variable to hold items from the local stroage
+    let itemsFromStorage;
+
+    //checking and getting anything in the local storage
+    //if local storage is empty then our array variable is also empty
+    if(localStorage.getItem("items") === null){
+        itemsFromStorage = []
+    } else{
+        //getting items from storage, since local storage is a json
+        //string we must use the parse method to parse that string
+        itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+    }
+
+    return itemsFromStorage;
 }
 
 //function that removes individual list items
