@@ -9,8 +9,12 @@ const fetchAPIData = async (endpoint) => {
     //is not advisible, it should be saved in a seperate area
     //or an .env file, but it will be here for convience and learning
     //purposes, as well as the key being free
+    //you can register your own key at http://www.themoviedb.org/settings/api
     const API_KEY = "a7eb6500d8df4f0a68716fcac20ad57b";
     const API_URL = "https://api.themoviedb.org/3/";
+
+    //while fetching the data, show the loading spinner
+    showSpinner();
 
     //fetching at the "url/endpoint?api_key=ourKey&language=en-US"
     //using backticks to wrap our string
@@ -20,11 +24,16 @@ const fetchAPIData = async (endpoint) => {
         `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
     );
 
+    //after done fetching the data hide the spinner
+    hideSpinner();
+
     //converting that response to json
     const data = await response.json();
     return data;
 }
 
+//a function that displays the 20 most popular movies, by creating a 
+//html div element that shows up as a card for each movie
 const displayPopularMovies = async () => {
     //passing the endpoint to the api function to get 
     //popular movies from the api
@@ -49,13 +58,13 @@ const displayPopularMovies = async () => {
             `<img
                 src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
                 class="card-img-top"
-                alt="Movie Poster"
+                alt="${movie.title} Poster"
             />` 
             : 
             `<img
                 src="images/no-image.jpg"
                 class="card-img-top"
-                alt="Movie Poster"
+                alt="${movie.title} Poster"
             />`
         }
         </a>
@@ -71,6 +80,61 @@ const displayPopularMovies = async () => {
         document.querySelector("#popular-movies").appendChild(movieDiv);
 
     })
+}
+
+//a function that displays the 20 most popular tv shows, by creating a 
+//html div element that shows up as a card for each show
+const displayPopularShows = async () => {
+    //passing the endpoint to the api function to get 
+    //popular tv from the api
+    //destructure the results array to retrieve it from the API data
+    const {results} = await fetchAPIData("tv/popular");
+
+    //creating a tv show card for each tv show we fetched
+    results.forEach((show) => {
+        const showDiv = document.createElement("div");
+        showDiv.classList.add("card");
+        
+        //creating the html element and replacing hardcoded
+        //values with our data
+        showDiv.innerHTML = 
+        `<a href="tv-details.html?id=${show.id}">
+        ${
+            show.poster_path?
+            `<img
+                src="https://image.tmdb.org/t/p/w500${show.poster_path}"
+                class="card-img-top"
+                alt="${show.name} Poster"
+            />` 
+            : 
+            `<img
+                src="images/no-image.jpg"
+                class="card-img-top"
+                alt="${show.name} Poster"
+            />`
+        }
+        </a>
+        
+        <div class="card-body">
+          <h5 class="card-title">${show.name}</h5>
+          <p class="card-text">
+            <small class="text-muted">Air Date: ${show.first_air_date}</small>
+          </p>
+        </div>`;
+
+        //appending the div to the document
+        document.querySelector("#popular-shows").appendChild(showDiv);
+
+    })
+}
+
+//function that displays the loading spinner
+const showSpinner = () => {
+    document.querySelector(".spinner").classList.add("show");
+}
+//function that hides the loading spinner
+const hideSpinner = () => {
+    document.querySelector(".spinner").classList.remove("show");
 }
 
 //highlight active link of the page we're on
@@ -97,6 +161,7 @@ const init = () => {
             displayPopularMovies();
             break;
         case "/shows.html":
+            displayPopularShows();
             break;
         case "/movie-details.html":
             break;
