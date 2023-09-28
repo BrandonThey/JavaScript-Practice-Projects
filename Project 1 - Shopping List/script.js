@@ -7,6 +7,16 @@ const clearButton = document.getElementById("clear");
 //variable for the item filter
 const itemFilter = document.getElementById("filter");
 
+//function that will display all the items in the list onto the web page
+const displayItems = () => {
+    //getting items from storage then adding them to the dome
+    const itemsFromStorage = getItemsFromStorage();
+    itemsFromStorage.forEach(item => {
+        addItemToDOM(item);
+    })
+    checkUI();
+}
+
 //Function to add items to the list
 const onAddItemSubmit = (e) =>{
     //prevent the default action of sumbitting
@@ -162,12 +172,20 @@ const filterItems = (e) => {
     })
 
 }
-//Adding event listeners for submittion of new items
-//and for removal of items 
-itemForm.addEventListener("submit", onAddItemSubmit);
-itemList.addEventListener("click", removeItem)
-//listening for the clear all button
-clearButton.addEventListener("click", clearItems)
-//listening to the item filter
-itemFilter.addEventListener("input", filterItems)
-checkUI();
+
+//initiallizing function
+const init = () => {
+    //Adding event listeners for submittion of new items
+    //and for removal of items 
+    itemForm.addEventListener("submit", onAddItemSubmit);
+    itemList.addEventListener("click", removeItem);
+    //listening for the clear all button
+    clearButton.addEventListener("click", clearItems);
+    //listening to the item filter
+    itemFilter.addEventListener("input", filterItems);
+    //listening to document, whenever the DOM is loaded we want to display the item list
+    document.addEventListener("DOMContentLoaded", displayItems);
+    checkUI();
+}
+
+init();
