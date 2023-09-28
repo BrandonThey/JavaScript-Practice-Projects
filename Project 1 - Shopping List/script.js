@@ -6,6 +6,9 @@ const itemList = document.getElementById("item-list");
 const clearButton = document.getElementById("clear");
 //variable for the item filter
 const itemFilter = document.getElementById("filter");
+//function to determine whether or not the add item button should be edit or not
+let isEditMode = false;
+const formButton = itemForm.querySelector("button");
 
 //function that will display all the items in the list onto the web page
 const displayItems = () => {
@@ -29,6 +32,18 @@ const onAddItemSubmit = (e) =>{
     if(newItem === ""){
         alert("Please add an item");
         return;
+    }
+
+    //checking for edit mode
+    if(isEditMode){
+        const itemToEdit = itemList.querySelector(".edit-mode");
+
+        //removes previous item from storage and the dom, and 
+        //replaces it with a newly created updated item
+        removeItemFromStorage(itemToEdit.textContent);
+        itemToEdit.classList.remove("edit-mode");
+        itemToEdit.remove();
+        isEditMode = false
     }
 
     //create dom element
@@ -110,12 +125,34 @@ const getItemsFromStorage = () => {
 //function that checks what has been clicked and determines 
 //what to do
 const onClickItem = (e) => {
-    //where e is the X icon, its parent is the X button, and its parent
-    //is the item tab
-    //checking if the target has a remove button
+    //where e is anywhere on the item tab the user clicked on
+    //if the user clicked on the X button "remove-item" button, then remove that iten
     if(e.target.parentElement.classList.contains("remove-item")){
         removeItem(e.target.parentElement.parentElement)
+    } else{
+        //if the user clicks anywhere else on the tab we want to update the "Add item" button
+        //to be an "Edit Item" button
+        setItemToEdit(e.target);
     }
+}
+
+//function that edits the text of an item 
+const setItemToEdit = (item) => {
+    isEditMode = true;
+
+    //resetting all item tabs to defualt styling
+    itemList
+        .querySelectorAll("li")
+        .forEach((i) => i.classList.remove("edit-mode"));
+
+    //changing the item class for styling
+    item.classList.add("edit-mode");
+    //changing the button to display "Update Item"
+    formButton.innerHTML = "<i class='fa-solid fa-pen'></i> Update Item"
+    formButton.style.background = "#228B22";
+    //changing text of the button
+    itemInput.value = item.textContent;
+
 }
 
 //function that removes individual list items
@@ -151,7 +188,7 @@ const clearItems = () => {
         }
 
         //clear all "items" from local storage
-        localStorage.removeItems("items");
+        localStorage.removeItem("items");
     }
     checkUI();
 }
@@ -159,6 +196,8 @@ const clearItems = () => {
 //function that occasionally checks the ui for items
 //to conditionally render certain elements
 const checkUI = () => {
+    //clearing the input
+    itemInput.value = "";
     //variable to hold all the list items in the list
     const items = itemList.querySelectorAll("li");
     
@@ -172,6 +211,12 @@ const checkUI = () => {
         clearButton.style.display = "block";
         itemFilter.style.display = "block";
     }
+
+    //resetting the update button to be the add item button
+    formButton.innerHTML = "<i class ='fa-solid fa-plus'></i>Add Item";
+    formButton.style.backgroundColor = "#333"
+    isEditMode = false;
+
 }
 
 //function that will filter out list items based on the value of itemFilter
