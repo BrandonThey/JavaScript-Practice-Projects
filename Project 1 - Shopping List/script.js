@@ -8,7 +8,7 @@ const clearButton = document.getElementById("clear");
 const itemFilter = document.getElementById("filter");
 
 //Function to add items to the list
-const addItem = (e) =>{
+const onAddItemSubmit = (e) =>{
     //prevent the default action of sumbitting
     e.preventDefault();
 
@@ -20,7 +20,18 @@ const addItem = (e) =>{
         alert("Please add an item");
         return;
     }
+    
+    addItemToDOM(newItem);
+    
+    //after adding a child to the items list, we want to check the ui again
+    checkUI();
 
+    //resetting the item input
+    itemInput.value="";
+}
+
+//function that adds the item to the dom/webpage
+const addItemToDOM = (item) => {
     //creating a variable to hold the item tab
     const listItem = document.createElement("li");
     //appending item data to the list 
@@ -32,12 +43,12 @@ const addItem = (e) =>{
 
     //appending the list item to the items list
     itemList.appendChild(listItem)
-    
-    //after adding a child to the items list, we want to check the ui again
-    checkUI();
+}
 
-    //resetting the item input
-    itemInput.value="";
+//Function to add items to local storage so our items
+//persist on page reload
+const addItemToStorage = (item) => {
+    
 }
 
 //function that creates a item remove button
@@ -124,7 +135,7 @@ const filterItems = (e) => {
 }
 //Adding event listeners for submittion of new items
 //and for removal of items 
-itemForm.addEventListener("submit", addItem);
+itemForm.addEventListener("submit", onAddItemSubmit);
 itemList.addEventListener("click", removeItem)
 //listening for the clear all button
 clearButton.addEventListener("click", clearItems)
