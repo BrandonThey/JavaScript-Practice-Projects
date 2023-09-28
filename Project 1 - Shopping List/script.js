@@ -107,19 +107,39 @@ const getItemsFromStorage = () => {
     return itemsFromStorage;
 }
 
-//function that removes individual list items
-const removeItem = (e) => {
+//function that checks what has been clicked and determines 
+//what to do
+const onClickItem = (e) => {
     //where e is the X icon, its parent is the X button, and its parent
     //is the item tab
     //checking if the target has a remove button
     if(e.target.parentElement.classList.contains("remove-item")){
-        //if the item tab has a remove button then we can remove
-        //the item
-        if(confirm("Did you want to remove this item?")){
-            e.target.parentElement.parentElement.remove();
-            checkUI();
-        }
+        removeItem(e.target.parentElement.parentElement)
     }
+}
+
+//function that removes individual list items
+const removeItem = (item) => {
+    //if the item tab has a remove button then we can remove
+    //the item
+    if(confirm("Did you want to remove this item?")){
+        //remove from DOM
+        item.remove();
+
+        //remove from storage
+        removeItemFromStorage(item.textContent);
+        checkUI();
+    }
+}
+
+const removeItemFromStorage = () => {
+    const itemsFromStorage = getItemsFromStorage();
+
+    //filter out the item to be removed
+    itemsFromStorage = itemsFromStorage.filter((i)=> i !== item);
+    
+    //reset to local storage
+    localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
 //function that removes all items in the list
@@ -178,7 +198,7 @@ const init = () => {
     //Adding event listeners for submittion of new items
     //and for removal of items 
     itemForm.addEventListener("submit", onAddItemSubmit);
-    itemList.addEventListener("click", removeItem);
+    itemList.addEventListener("click", onClickItem);
     //listening for the clear all button
     clearButton.addEventListener("click", clearItems);
     //listening to the item filter
