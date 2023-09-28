@@ -44,6 +44,12 @@ const onAddItemSubmit = (e) =>{
         itemToEdit.classList.remove("edit-mode");
         itemToEdit.remove();
         isEditMode = false
+    } else{
+        //checking if the item exists
+        if(checkIfItemsExists(newItem)){
+            alert("That item already exists");
+            return
+        }
     }
 
     //create dom element
@@ -136,6 +142,14 @@ const onClickItem = (e) => {
     }
 }
 
+//function that prevents duplicates by checking if they already exist
+const checkIfItemsExists = (item) => {
+    const itemsFromStorage = getItemsFromStorage();
+
+    //checking the items array to see if it includes the item
+    //and returns the result, true or false
+    return itemsFromStorage.includes(item);
+}
 //function that edits the text of an item 
 const setItemToEdit = (item) => {
     isEditMode = true;
