@@ -82,6 +82,74 @@ const displayPopularMovies = async () => {
     })
 }
 
+//displays movie details when a user clicks on the movie's card
+const displayMovieDetails = async () => {
+    //getting the url search params, and using split to only get the id number
+    const movieID = window.location.search.split("=")[1];
+
+    //fetching movie data
+    const movie = await fetchAPIData(`movie/${movieID}`)
+
+    //creating display for information in the document
+    //following a lot of the same stuff we did for the movie
+    //display and the tv show display
+    const movieDiv = document.createElement("div");
+    movieDiv.innerHTML = 
+    `<div class="details-top">
+        <div>
+        ${
+            movie.poster_path?
+            `<img
+                src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                class="card-img-top"
+                alt="${movie.title} Poster"
+            />` 
+            : 
+            `<img
+                src="images/no-image.jpg"
+                class="card-img-top"
+                alt="${movie.title} Poster"
+            />`
+        }
+        </div>
+        <div>
+        <h2>${movie.title}</h2>
+        <p>
+            <i class="fas fa-star text-primary"></i>
+            ${movie.vote_average.toFixed(1)} / 10
+        </p>
+        <p class="text-muted">Release Date: ${movie.release_date}</p>
+        <p>
+            ${movie.overview}
+        </p>
+        <h5>Genres</h5>
+        <ul class="list-group">
+            ${movie.genres.map((genre) => {
+                `<li>${genre.name}</li>`
+            }).join("")}
+        </ul>
+        <a href="${movie.homepage}" target="_blank" class="btn">Visit Movie Homepage</a>
+        </div>
+    </div>
+    <div class="details-bottom">
+        <h2>Movie Info</h2>
+        <ul>
+        <li><span class="text-secondary">Budget:</span> $${addCommasToNumber(movie.budget)}</li>
+        <li><span class="text-secondary">Revenue:</span> $${addCommasToNumber(movie.revenue)}</li>
+        <li><span class="text-secondary">Runtime:</span> ${movie.runtime} minutes</li>
+        <li><span class="text-secondary">Status:</span> ${movie.status}</li>
+        </ul>
+        <h4>Production Companies</h4>
+        <div class="list-group">
+            ${movie.production_companies
+                .map((company) => `<span>${company.name}</span>`).join(", ")}
+        </div>
+    </div>`;
+
+    document.querySelector("#movie-details").appendChild(movieDiv);
+}
+
+
 //a function that displays the 20 most popular tv shows, by creating a 
 //html div element that shows up as a card for each show
 const displayPopularShows = async () => {
@@ -149,6 +217,10 @@ const highlightActiveLink = () => {
     });
 }
 
+//adds commas to numbers greater than 100 using regex
+const addCommasToNumber = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 //initializing function that runs every time a page is loaded
 const init = () => {
     //switch statement that determines what action to take
@@ -164,6 +236,7 @@ const init = () => {
             displayPopularShows();
             break;
         case "/movie-details.html":
+            displayMovieDetails();
             break;
         case "/tv-details.html":
             break;
