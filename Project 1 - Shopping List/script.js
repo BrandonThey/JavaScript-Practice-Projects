@@ -9,7 +9,7 @@ const itemFilter = document.getElementById("filter");
 
 //function that will display all the items in the list onto the web page
 const displayItems = () => {
-    //getting items from storage then adding them to the dome
+    //getting items from storage then adding them to the dom
     const itemsFromStorage = getItemsFromStorage();
     itemsFromStorage.forEach(item => {
         addItemToDOM(item);
@@ -49,7 +49,7 @@ const addItemToDOM = (item) => {
     //creating a variable to hold the item tab
     const listItem = document.createElement("li");
     //appending item data to the list 
-    listItem.appendChild(document.createTextNode(newItem))
+    listItem.appendChild(document.createTextNode(item))
 
     //append button to the item
     const itemButton = createButton("remove-item btn-link text-red");
@@ -184,6 +184,7 @@ const init = () => {
     //listening to the item filter
     itemFilter.addEventListener("input", filterItems);
     //listening to document, whenever the DOM is loaded we want to display the item list
+    
     document.addEventListener("DOMContentLoaded", displayItems);
     checkUI();
 }
