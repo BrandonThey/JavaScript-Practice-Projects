@@ -101,10 +101,33 @@ const checkUI = () => {
     }
 }
 
+//function that will filter out list items based on the value of itemFilter
+const filterItems = (e) => {
+    const filter = e.target.value.toLowerCase();
+    const items = itemList.querySelectorAll("li");
+
+    //for each item,
+    items.forEach(item => {
+        //we want to grab the text of the item
+        const itemName = item.firstChild.textContent.toLowerCase();
+
+        //and compare the text to our filter, using indexOf
+        //indexOf finds substrings of the filter inside the itemName
+        //and returns -1 if not found
+        if(itemName.indexOf(filter) != -1){
+            item.style.display = "flex"
+        } else{
+            item.style.display = "none";
+        }
+    })
+
+}
 //Adding event listeners for submittion of new items
 //and for removal of items 
 itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem)
 //listening for the clear all button
 clearButton.addEventListener("click", clearItems)
+//listening to the item filter
+itemFilter.addEventListener("input", filterItems)
 checkUI();
