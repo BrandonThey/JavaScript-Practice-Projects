@@ -13,7 +13,7 @@ const fetchAPIData = async (endpoint) => {
     const API_URL = "https://api.themoviedb.org/3/";
 
     //fetching at the "url/endpoint?api_key=ourKey&language=en-US"
-    //using the tilde to wrap our string
+    //using backticks to wrap our string
     //all query strings found in the documentation here:
     //https://developer.themoviedb.org/docs
     const response = await fetch(
@@ -28,8 +28,49 @@ const fetchAPIData = async (endpoint) => {
 const displayPopularMovies = async () => {
     //passing the endpoint to the api function to get 
     //popular movies from the api
-    const results = await fetchAPIData("movie/popular");
-    console.log(results)
+    //destructure the results array to retrieve it from the API data
+    const {results} = await fetchAPIData("movie/popular");
+
+    //creating a movie card for each movie we fetched
+    results.forEach((movie) => {
+        const movieDiv = document.createElement("div");
+        movieDiv.classList.add("card");
+        
+        //creating the html element and replacing hardcoded
+        //values with our data 
+        //the image uses a ternary operator to determine
+        //if the movie has an image or not. if it does
+        //then use the movie poster path otherwise use
+        //the default picture
+        movieDiv.innerHTML = 
+        `<a href="movie-details.html?id=${movie.id}">
+        ${
+            movie.poster_path?
+            `<img
+                src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                class="card-img-top"
+                alt="Movie Poster"
+            />` 
+            : 
+            `<img
+                src="images/no-image.jpg"
+                class="card-img-top"
+                alt="Movie Poster"
+            />`
+        }
+        </a>
+        
+        <div class="card-body">
+          <h5 class="card-title">${movie.title}</h5>
+          <p class="card-text">
+            <small class="text-muted">Release: ${movie.release_date}</small>
+          </p>
+        </div>`;
+
+        //appending the div to the document
+        document.querySelector("#popular-movies").appendChild(movieDiv);
+
+    })
 }
 
 //highlight active link of the page we're on
