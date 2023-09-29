@@ -302,6 +302,78 @@ const displayBackgroundImage = (type, background_path) =>{
     }
 }
 
+//display movies on a slider using the swiper library
+const displaySlider = async () => {
+    //getting the results of movies that are now playing in theaters
+    const {results} = await fetchAPIData("movie/now_playing");
+
+    results.forEach((movie) => {
+        //for each movie, we want to create a slider card 
+        const sliderDiv = document.createElement("div");
+        sliderDiv.classList.add("swiper-slide");
+
+        sliderDiv.innerHTML = 
+        `
+        <a href="movie-details.html?id=${movie.id}">
+        ${
+            movie.poster_path?
+            `<img
+                src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                class="card-img-top"
+                alt="${movie.title} Poster"
+            />` 
+            : 
+            `<img
+                src="images/no-image.jpg"
+                class="card-img-top"
+                alt="${movie.title} Poster"
+            />`
+        }
+        </a>
+        <h4>
+            <i class="fas fa-star text-secondary"></i> ${movie.vote_average.toFixed(1)} / 10
+        </h4>
+        `;
+
+        document.querySelector(".swiper-wrapper").appendChild(sliderDiv);
+        
+        initSwiper();
+    })
+}
+
+//function that initializes a swiper object
+//all the swiper documentation can be found here:
+// https://swiperjs.com/get-started
+const initSwiper = () => {
+    const swiper = new Swiper(".swiper", {
+        //number of slides per page, defaulted to 1
+        slidesPerView: 1,
+        //space between cards of the slider
+        spaceBetween: 15,
+        //freemode allows users to drag the slider
+        freeMode: true,
+        //loop and autoplay are self explanatory
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false
+        },
+        //breakpoints determine how many movie cards we can display
+        //based on how large the window is
+        breakpoints: {
+            500: {
+                slidesPerView: 2
+            },
+            700: {
+                slidesPerView: 3
+            },
+            1200: {
+                slidesPerView: 4
+            }
+        }
+    })
+}
+
 //function that displays the loading spinner
 const showSpinner = () => {
     document.querySelector(".spinner").classList.add("show");
@@ -336,6 +408,7 @@ const init = () => {
         // the / and the index.html pages are the same
         case "/":
         case "/index.html":
+            displaySlider();
             displayPopularMovies();
             break;
         case "/shows.html":
