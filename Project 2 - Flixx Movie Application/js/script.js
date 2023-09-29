@@ -413,12 +413,64 @@ const search = async () => {
 
     if(global.search.term !== "" && global.search.term !== null){
         //making api request and displaying results
-        const results = await searchAPIData();
-        console.log(results)
+        const {results, total_pages, page} = await searchAPIData();
+        
+        //checking to see if we do not have results show and alert else display them
+        if(results.length === 0){
+            showAlert("No results found", "alert-error")
+        }else{
+            //displaying results
+            displaySearchResults(results);
+            //resetting the search bar value
+            document.querySelector("#search-term").value = "";
+        }
+
     } else{
         //send an alert to warn the user
-        showAlert("Please enter a search term")
+        showAlert("Please enter a search term", "alert-error")
     }
+}
+
+//function that will display the results of a search
+const displaySearchResults = (results) => {
+    results.forEach((result) => {
+        const div = document.createElement("div");
+        div.classList.add("card");
+        
+        //creating the html element and replacing hardcoded
+        //values with our data 
+        //the image uses a ternary operator to determine
+        //if the movie has an image or not. if it does
+        //then use the movie poster path otherwise use
+        //the default picture
+        div.innerHTML = 
+        `<a href="${global.search.type}-details.html?id=${result.id}">
+        ${
+            result.poster_path?
+            `<img
+                src="https://image.tmdb.org/t/p/w500${result.poster_path}"
+                class="card-img-top"
+                alt="${global.search.type === "movie" ? result.title : result.name} Poster"
+            />` 
+            : 
+            `<img
+                src="images/no-image.jpg"
+                class="card-img-top"
+                alt="${global.search.type === "movie" ? result.title : result.name} Poster"
+            />`
+        }
+        </a>
+        
+        <div class="card-body">
+          <h5 class="card-title">$${global.search.type === "movie" ? result.title : result.name}</h5>
+          <p class="card-text">
+            <small class="text-muted">Release: ${global.search.type === "movie" ? result.release_date : result.first_air_date}</small>
+          </p>
+        </div>`;
+
+        //appending the div to the document
+        document.querySelector("#search-results").appendChild(div);
+    })
 }
 
 //function that displays the loading spinner
