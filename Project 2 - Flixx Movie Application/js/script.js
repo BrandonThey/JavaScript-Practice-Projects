@@ -5,7 +5,8 @@ const global = {
         term: "",
         type: "",
         page: 1,
-        totalPages: 1
+        totalPages: 1,
+        totalResults: 0
     },
         //in a production enviroment having the key exposed
     //is not advisible, it should be saved in a seperate area
@@ -413,8 +414,13 @@ const search = async () => {
 
     if(global.search.term !== "" && global.search.term !== null){
         //making api request and displaying results
-        const {results, total_pages, page} = await searchAPIData();
+        const {results, total_pages, page, total_results} = await searchAPIData();
         
+        //adding info the global obj
+        global.search.totalPages = total_pages;
+        global.search.page = page;
+        global.search.totalResults = total_results;
+
         //checking to see if we do not have results show and alert else display them
         if(results.length === 0){
             showAlert("No results found", "alert-error")
@@ -462,15 +468,51 @@ const displaySearchResults = (results) => {
         </a>
         
         <div class="card-body">
-          <h5 class="card-title">$${global.search.type === "movie" ? result.title : result.name}</h5>
+          <h5 class="card-title">${global.search.type === "movie" ? result.title : result.name}</h5>
           <p class="card-text">
             <small class="text-muted">Release: ${global.search.type === "movie" ? result.release_date : result.first_air_date}</small>
           </p>
         </div>`;
 
+        document.querySelector("#search-results-heading")
+            .innerHTML=
+            `
+                <h2>${results.length} of ${global.search.totalResults} Results for ${global.search.term}</h2>
+            `
         //appending the div to the document
         document.querySelector("#search-results").appendChild(div);
     })
+
+    //displaying the pagination
+    displayPagination();
+}
+
+//create and displaying the pagination for search results
+const displayPagination = () => {
+    const pageDiv = document.createElement("div");
+    pageDiv.classList.add("paginnation")
+    pageDiv.innerHTML = 
+    `
+        <button class="btn btn-primary" id="prev">Prev</button>
+        <button class="btn btn-primary" id="next">Next</button>
+        <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
+    `;
+
+    document.querySelector("#pagination").appendChild(pageDiv)
+
+    //disable previous button if on first page
+    if(global.search.page === 1){
+        document.querySelector("#prev").disabled = true;
+    } else{
+        document.querySelector("#prev").disabled = false;
+    }
+
+    //disable next button if on first page
+    if(global.search.page === global.search.totalPages){
+        document.querySelector("#next").disabled = true;
+    } else{
+        document.querySelector("#next").disabled = false;
+    }
 }
 
 //function that displays the loading spinner
