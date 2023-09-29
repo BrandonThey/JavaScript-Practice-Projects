@@ -90,6 +90,10 @@ const displayMovieDetails = async () => {
     //fetching movie data
     const movie = await fetchAPIData(`movie/${movieID}`)
 
+    //overlay for background image that takes two arugments
+    //a type and the path to the background image
+    displayBackgroundImage("movie", movie.backdrop_path);
+
     //creating display for information in the document
     //following a lot of the same stuff we did for the movie
     //display and the tv show display
@@ -204,6 +208,10 @@ const displayShowDetails = async () => {
     //fetching movie data
     const show = await fetchAPIData(`tv/${showID}`)
 
+    //overlay for background image that takes two arugments
+    //a type and the path to the background image
+    displayBackgroundImage("show", show.backdrop_path);
+
     //creating display for information in the document
     //following a lot of the same stuff we did for the movie
     //display and the tv show display
@@ -263,6 +271,35 @@ const displayShowDetails = async () => {
     </div>`;
 
     document.querySelector("#show-details").appendChild(showDiv);
+}
+
+//function that displays the background image, on the details pages
+const displayBackgroundImage = (type, background_path) =>{
+    const overlayDiv = document.createElement("div");
+    //setting the background image to the one we've received
+    overlayDiv.style.backgroundImage = 
+        `url(https://image.tmdb.org/t/p/original/${background_path})`;
+
+    //stylings for the overlay
+    overlayDiv.style.backgroundSize = "cover";
+    overlayDiv.style.backgroundPosition = "center";
+    overlayDiv.style.backgroundRepeat = "no-repeat";
+    overlayDiv.style.height = "100vh";
+    overlayDiv.style.width = "100vw";
+    overlayDiv.style.position = "absolute";
+    overlayDiv.style.top = "0";
+    overlayDiv.style.left = "0";
+    overlayDiv.style.zIndex = "-1";
+    overlayDiv.style.opacity = "0.1";
+
+    //checking the type and appending appropriately
+    console.log("in the background image " + type)
+    if(type === "movie"){
+        console.log("in the background image " + type)
+        document.querySelector("#movie-details").appendChild(overlayDiv);
+    } else{
+        document.querySelector("#show-details").appendChild(overlayDiv);
+    }
 }
 
 //function that displays the loading spinner
