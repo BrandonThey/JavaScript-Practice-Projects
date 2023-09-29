@@ -1,6 +1,12 @@
 //creating a global object that will contain all our global variables
 const global = {
-    currentPage: window.location.pathname
+    currentPage: window.location.pathname,
+    search: {
+        term: "",
+        type: "",
+        page: 1,
+        totalPages: 1
+    }
 }
 
 //asynchronous fetch function that fetches movie data from the TMDB API
@@ -374,6 +380,24 @@ const initSwiper = () => {
     })
 }
 
+//search function to search from movies or tv shows from the api
+const search = async () => {
+    //getting the url query 
+    const queryString = window.location.search
+    //seperating the query for the type and name of the show or movie
+    //and setting them into our global variables
+    const urlParams = new URLSearchParams(queryString);
+    global.search.type = urlParams.get("type");
+    global.search.term = urlParams.get("search-term");
+
+    if(global.search.term !== "" && global.search.term !== null){
+        //making api request and displaying results
+    } else{
+        //send an alert to warn the user
+        
+    }
+}
+
 //function that displays the loading spinner
 const showSpinner = () => {
     document.querySelector(".spinner").classList.add("show");
@@ -399,6 +423,19 @@ const highlightActiveLink = () => {
 const addCommasToNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+//show custom alert
+const showAlert = (message, className) => {
+    //creating a custom div that will display an alert on the page
+    const alertElement = document.createElement("div");
+    alertElement.classList.add("alert", className);
+    alertElement.appendChild(document.createTextNode(message));
+    document.querySelector("#alert").appendChild(alertElement);
+
+    //removes the alert after 3 seconds
+    setTimeout(() => alertElement.remove(), 3000);
+}
+
 //initializing function that runs every time a page is loaded
 const init = () => {
     //switch statement that determines what action to take
@@ -421,6 +458,7 @@ const init = () => {
             displayShowDetails();
             break;
         case "/search.html":
+            search();
             break;
     }
 
