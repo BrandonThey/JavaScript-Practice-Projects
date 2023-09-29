@@ -16,7 +16,7 @@ const global = {
     API_URL: "https://api.themoviedb.org/3/"
 }
 
-//asynchronous fetch function that fetches movie data from the TMDB API
+//asynchronous fetch function that fetches movie/show data from the TMDB API
 const fetchAPIData = async (endpoint) => {
     //while fetching the data, show the loading spinner
     showSpinner();
@@ -26,7 +26,29 @@ const fetchAPIData = async (endpoint) => {
     //all query strings found in the documentation here:
     //https://developer.themoviedb.org/docs
     const response = await fetch(
-        `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
+        `${global.API_URL}${endpoint}?api_key=${global.API_KEY}&language=en-US`
+    );
+
+    //after done fetching the data hide the spinner
+    hideSpinner();
+
+    //converting that response to json
+    const data = await response.json();
+    return data;
+}
+
+//asynchronous fetch function that fetches movie/show data from the TMDB API
+//based on search parameters
+const searchAPIData = async (endpoint) => {
+    //while fetching the data, show the loading spinner
+    showSpinner();
+
+    //fetching at the "url/endpoint?api_key=ourKey&language=en-US"
+    //using backticks to wrap our string
+    //all query strings found in the documentation here:
+    //https://developer.themoviedb.org/docs
+    const response = await fetch(
+        `${global.API_URL}search/${global.search.type}?api_key=${global.API_KEY}&language=en-US&query=${global.search.term}`
     );
 
     //after done fetching the data hide the spinner
@@ -392,7 +414,7 @@ const search = async () => {
     if(global.search.term !== "" && global.search.term !== null){
         //making api request and displaying results
         const results = await searchAPIData();
-        
+        console.log(results)
     } else{
         //send an alert to warn the user
         showAlert("Please enter a search term")
