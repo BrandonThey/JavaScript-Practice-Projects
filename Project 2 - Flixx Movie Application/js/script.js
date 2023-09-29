@@ -49,7 +49,7 @@ const searchAPIData = async (endpoint) => {
     //all query strings found in the documentation here:
     //https://developer.themoviedb.org/docs
     const response = await fetch(
-        `${global.API_URL}search/${global.search.type}?api_key=${global.API_KEY}&language=en-US&query=${global.search.term}`
+        `${global.API_URL}search/${global.search.type}?api_key=${global.API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`
     );
 
     //after done fetching the data hide the spinner
@@ -439,6 +439,11 @@ const search = async () => {
 
 //function that will display the results of a search
 const displaySearchResults = (results) => {
+
+    //clearing the previous if any results
+    document.querySelector("#search-results").innerHTML = "";
+    document.querySelector("#search-results-heading").innerHTML = "";
+    document.querySelector("#pagination").innerHTML = "";
     results.forEach((result) => {
         const div = document.createElement("div");
         div.classList.add("card");
@@ -513,6 +518,24 @@ const displayPagination = () => {
     } else{
         document.querySelector("#next").disabled = false;
     }
+
+    //next page button
+    //using a callback function to increment the search page, and get new api
+    //data for the new page and displaying it
+    document.querySelector("#next").addEventListener("click", async () =>{
+        global.search.page++;
+        const{results, total_pages} = await searchAPIData();
+        displaySearchResults(results)
+    })
+
+    //previous page button
+    //using a callback function to decrement the search page, and get new api
+    //data for the new page and displaying it
+    document.querySelector("#prev").addEventListener("click", async () =>{
+        global.search.page--;
+        const{results, total_pages} = await searchAPIData();
+        displaySearchResults(results)
+    })
 }
 
 //function that displays the loading spinner
