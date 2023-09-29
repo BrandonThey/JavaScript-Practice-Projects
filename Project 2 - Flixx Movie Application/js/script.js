@@ -6,19 +6,18 @@ const global = {
         type: "",
         page: 1,
         totalPages: 1
-    }
-}
-
-//asynchronous fetch function that fetches movie data from the TMDB API
-const fetchAPIData = async (endpoint) => {
-    //in a production enviroment having the key exposed
+    },
+        //in a production enviroment having the key exposed
     //is not advisible, it should be saved in a seperate area
     //or an .env file, but it will be here for convience and learning
     //purposes, as well as the key being free
     //you can register your own key at http://www.themoviedb.org/settings/api
-    const API_KEY = "a7eb6500d8df4f0a68716fcac20ad57b";
-    const API_URL = "https://api.themoviedb.org/3/";
+    API_KEY: "a7eb6500d8df4f0a68716fcac20ad57b",
+    API_URL: "https://api.themoviedb.org/3/"
+}
 
+//asynchronous fetch function that fetches movie data from the TMDB API
+const fetchAPIData = async (endpoint) => {
     //while fetching the data, show the loading spinner
     showSpinner();
 
@@ -392,9 +391,11 @@ const search = async () => {
 
     if(global.search.term !== "" && global.search.term !== null){
         //making api request and displaying results
+        const results = await searchAPIData();
+        
     } else{
         //send an alert to warn the user
-        
+        showAlert("Please enter a search term")
     }
 }
 
