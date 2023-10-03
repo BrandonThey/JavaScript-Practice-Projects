@@ -14,9 +14,12 @@ class CalorieTracker{
 
         //diplaying total
         this._displayCaloriesTotal();
-
         //displaying limit
         this._displayCaloriesLimit();
+        //displaying calories consumed
+        this._displayCaloriesConsumed();
+        //displaying the calories burned
+        this._displayCaloriesBurned();
     }
 
     // PUBLIC METHODS/API//
@@ -56,10 +59,36 @@ class CalorieTracker{
         calorieLimitElement.innerHTML = this._calorieLimit;
     }
 
-    //method that rerenders the html elements whenever they have been changed
+    //function that displays how many calories have been consumed through food
+    _displayCaloriesConsumed(){
+        const caloriesConsumedElement = document.getElementById("calories-consumed");
+        
+        //using the reduce method and a callback function to calculate
+        //all the calories in the meals array
+        const consumedCalories = this._meals.reduce((total, meal) => total + meal.calories, 0);
+    
+        caloriesConsumedElement.innerHTML = consumedCalories;
+    }
+
+    //function that displays how many calories have been burned through workouts
+    _displayCaloriesBurned(){
+        const caloriesBurnedElement = document.getElementById("calories-burned");
+        
+        //using the reduce method and a callback function to calculate
+        //all the calories in the workout array
+        const burnedCalories = this._workouts.reduce((total, workout) => total + workout.calories, 0);
+    
+        caloriesBurnedElement.innerHTML = burnedCalories;
+    }
+
+    //function that rerenders the html elements whenever they have been changed
     _render(){
         //displaying the adjusted total
         this._displayCaloriesTotal();
+        //displaying adjusted consumed calories
+        this._displayCaloriesConsumed();
+        //displaying adjusted burned calories
+        this._displayCaloriesBurned();
     }
 }
 
