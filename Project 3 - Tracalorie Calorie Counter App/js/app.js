@@ -34,7 +34,7 @@ class CalorieTracker{
 //to track that meal's information
 class Meal {
     constructor(name, calories){
-        //generating a random hexadecimal (toString(16)) number
+        //generating a random hexadecimal (toString(16)) id
         //and slicing out the starting Ox from the value (slice(2))
         this.id = Math.random().toString(16).slice(2);
         this.name = name;
@@ -46,10 +46,25 @@ class Meal {
 //to track that workout's information
 class Workout {
     constructor(name, calories){
-        //generating a random hexadecimal (toString(16)) number
+        //generating a random hexadecimal (toString(16)) id
         //and slicing out the starting Ox from the value (slice(2))
         this.id = Math.random().toString(16).slice(2);
         this.name = name;
         this.calories = calories
     }
 }
+
+//instatiating the tracker
+const tracker = new CalorieTracker();
+
+//creating and utilizing some example meals and workouts
+//to test the tracker
+const breakfast = new Meal("Breakfast", 400);
+tracker.addMeal(breakfast);
+
+const running = new Workout("running", 200);
+tracker.addWorkout(running);
+
+console.log(tracker._meals)
+console.log(tracker._workouts)
+console.log(tracker._totalCalories)
