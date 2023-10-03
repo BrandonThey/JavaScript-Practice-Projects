@@ -1,2 +1,2 @@
 # Flixx Movie App
-A vanilla javascript project that will create a web application that allows the user to search up a movie to see its details such as the description or the budget, etc of the movie. This project includes utilizing API calls to the TheMovieDb api for movie information. 
+A vanilla javascript project that will create a web application that allows the user to search up a movie to see its details such as the description or the budget, etc of the movie. This project includes utilizing API calls to the TheMovieDb api for movie information. This project will also be hosted on github pages through this repository https://github.com/BrandonThey/Flixx-Movie-WebApp and deployed on Netlify here: https://main--stirring-crostata-12737d.netlify.app/
