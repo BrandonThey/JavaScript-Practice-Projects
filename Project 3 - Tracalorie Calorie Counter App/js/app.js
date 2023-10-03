@@ -11,14 +11,23 @@ class CalorieTracker{
         //arrays to contains lists of meals and workouts
         this._meals = [];
         this._workouts = [];
+
+        //diplaying total
+        this._displayCaloriesTotal();
+
+        //displaying limit
+        this._displayCaloriesLimit();
     }
 
+    // PUBLIC METHODS/API//
     //add meals function that adds the user entered meal to the meals array
     //and adds that meal's calories to the total calories consumed
     //takes a meal object and does not return anything
     addMeal(meal){
         this._meals.push(meal);
         this._totalCalories += meal.calories;
+        //rerendering
+        this._render();
     }
 
     //add workout function that adds the user entered workout to the workout array
@@ -27,6 +36,30 @@ class CalorieTracker{
     addWorkout(workout){
         this._workouts.push(workout);
         this._totalCalories -= (workout.calories);
+        //rerendering
+        this._render();
+    }
+
+    
+    //PRIVATE METHODS//
+    //function that displays the calorie total by 
+    //manipulating the html of the calories total element
+    _displayCaloriesTotal(){
+        const totalCaloriesElement = document.getElementById("calories-total");
+        totalCaloriesElement.innerHTML = this._totalCalories;
+    }
+
+    //function that displays the calorie limit by 
+    //manipulating the html of the calories limit element
+    _displayCaloriesLimit(){
+        const calorieLimitElement = document.getElementById("calories-limit");
+        calorieLimitElement.innerHTML = this._calorieLimit;
+    }
+
+    //method that rerenders the html elements whenever they have been changed
+    _render(){
+        //displaying the adjusted total
+        this._displayCaloriesTotal();
     }
 }
 
