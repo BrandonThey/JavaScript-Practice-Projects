@@ -20,6 +20,8 @@ class CalorieTracker{
         this._displayCaloriesConsumed();
         //displaying the calories burned
         this._displayCaloriesBurned();
+        //displaying remaining calorie count
+        this._displayCaloriesRemaining();
     }
 
     // PUBLIC METHODS/API//
@@ -81,6 +83,15 @@ class CalorieTracker{
         caloriesBurnedElement.innerHTML = burnedCalories;
     }
 
+    //function that displays how many calories remain by subtracting total calories from calorie limit
+    _displayCaloriesRemaining(){
+        const caloriesRemainElement = document.getElementById("calories-remaining");
+        
+        const remainingCalories = this._calorieLimit - this._totalCalories;
+    
+        caloriesRemainElement.innerHTML = remainingCalories;
+    }
+
     //function that rerenders the html elements whenever they have been changed
     _render(){
         //displaying the adjusted total
@@ -89,6 +100,8 @@ class CalorieTracker{
         this._displayCaloriesConsumed();
         //displaying adjusted burned calories
         this._displayCaloriesBurned();
+        //displaying adjusted remaining calorie count
+        this._displayCaloriesRemaining();
     }
 }
 
