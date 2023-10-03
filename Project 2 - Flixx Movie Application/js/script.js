@@ -321,7 +321,6 @@ const displayBackgroundImage = (type, background_path) =>{
     overlayDiv.style.opacity = "0.1";
 
     //checking the type and appending appropriately
-    console.log("in the background image " + type)
     if(type === "movie"){
         console.log("in the background image " + type)
         document.querySelector("#movie-details").appendChild(overlayDiv);
