@@ -22,6 +22,8 @@ class CalorieTracker{
         this._displayCaloriesBurned();
         //displaying remaining calorie count
         this._displayCaloriesRemaining();
+        //displaying progress bar
+        this._displayCaloriesProgress();
     }
 
     // PUBLIC METHODS/API//
@@ -92,6 +94,15 @@ class CalorieTracker{
         caloriesRemainElement.innerHTML = remainingCalories;
     }
 
+    //function that will display the progress bar and adjust it based on how many calories were consumed
+    _displayCaloriesProgress(){
+        const progressElement = document.getElementById("calorie-progress");
+        //calculating a percent to set the progress bar
+        const percentage = (this._totalCalories / this._calorieLimit) * 100;
+        const width = Math.min(percentage, 100);
+
+        progressElement.style.width = `${width}%`
+    }
     //function that rerenders the html elements whenever they have been changed
     _render(){
         //displaying the adjusted total
@@ -102,6 +113,8 @@ class CalorieTracker{
         this._displayCaloriesBurned();
         //displaying adjusted remaining calorie count
         this._displayCaloriesRemaining();
+        //displaying adjusted progress bar
+        this._displayCaloriesProgress();
     }
 }
 
