@@ -166,6 +166,8 @@ class App {
         //listener for meal form, for adding meals, that calls the _newMeal function when 
         //submitted, and binding the newMeal function to the app
         document.getElementById("meal-form").addEventListener("submit", this._newMeal.bind(this));
+        //listener for workouts
+        document.getElementById("workout-form").addEventListener("submit", this._newWorkout.bind(this));
     }
 
     //new meal function that gets meals info from the form and verifies it
@@ -190,6 +192,25 @@ class App {
         //resetting inputs
         name.value = "";
         calories.value = "";
+    }
+
+    _newWorkout(e){
+        e.preventDefault();
+        const name = document.getElementById("workout-name");
+        const caloriesBurned = document.getElementById("workout-calories");
+        
+        //validating input
+        if(name.value === "" || caloriesBurned.value === ""){
+            alert("Please enter workout information");
+        }
+
+        //creating workout object and adding it to the tracker
+        const newWorkout = new Workout(name.value, +caloriesBurned.value);
+        this._tracker.addWorkout(newWorkout);
+
+        //resetting inputs
+        name.value = "";
+        caloriesBurned.value = "";
     }
 }
 
