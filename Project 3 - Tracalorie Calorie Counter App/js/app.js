@@ -157,17 +157,3 @@ class Workout {
     }
 }
 
-//instatiating the tracker
-const tracker = new CalorieTracker();
-
-//creating and utilizing some example meals and workouts
-//to test the tracker
-const breakfast = new Meal("Breakfast", 400);
-tracker.addMeal(breakfast);
-
-const running = new Workout("running", 200);
-tracker.addWorkout(running);
-
-console.log(tracker._meals)
-console.log(tracker._workouts)
-console.log(tracker._totalCalories)
