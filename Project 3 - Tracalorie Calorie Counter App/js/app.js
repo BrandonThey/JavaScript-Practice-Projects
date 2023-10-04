@@ -157,3 +157,41 @@ class Workout {
     }
 }
 
+//App class that acts as a driver object for the application
+class App {
+
+    //constructor that instatiates a calorie tracker object and adds listeners
+    constructor(){
+        this._tracker = new CalorieTracker();
+        //listener for meal form, for adding meals, that calls the _newMeal function when 
+        //submitted, and binding the newMeal function to the app
+        document.getElementById("meal-form").addEventListener("submit", this._newMeal.bind(this));
+    }
+
+    //new meal function that gets meals info from the form and verifies it
+    //creates new meal object and adds it to the CalorieTracker
+    _newMeal(e){
+        e.preventDefault();
+        const name = document.getElementById("meal-name");
+        const calories = document.getElementById("meal-calories");
+        
+        //validating input
+        if(name.value === "" || calories.value === ""){
+            alert("Please enter meal information");
+        }
+
+        //creating meal object and adding it to the tracker
+        //the + in front of the calories converts it to a number from a string
+        //no need to validate if the calories are a number since the form only allows 
+        //number inputs for that field
+        const newMeal = new Meal(name.value, +calories.value);
+        this._tracker.addMeal(newMeal);
+
+        //resetting inputs
+        name.value = "";
+        calories.value = "";
+    }
+}
+
+//instatiating a new App object
+const app = new App();
