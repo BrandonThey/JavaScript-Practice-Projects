@@ -192,6 +192,13 @@ class App {
         //resetting inputs
         name.value = "";
         calories.value = "";
+
+        //collapsing form menu after getting the values
+        //we can use the bootstrap.Collapse because we have the bootstrap javascript file
+        const collapseMeal = document.getElementById("collapse-meal");
+        const bsCollapse = new bootstrap.Collapse(collapseMeal, {
+            toggle: true
+        });
     }
 
     _newWorkout(e){
@@ -211,6 +218,13 @@ class App {
         //resetting inputs
         name.value = "";
         caloriesBurned.value = "";
+
+        //collapsing form menu after getting the values
+        //we can use the bootstrap.Collapse because we have the bootstrap javascript file
+        const collapseWorkout = document.getElementById("collapse-workout");
+        const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+            toggle: true
+        });
     }
 }
 
