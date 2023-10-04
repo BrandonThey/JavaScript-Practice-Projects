@@ -12,18 +12,8 @@ class CalorieTracker{
         this._meals = [];
         this._workouts = [];
 
-        //diplaying total
-        this._displayCaloriesTotal();
-        //displaying limit
-        this._displayCaloriesLimit();
-        //displaying calories consumed
-        this._displayCaloriesConsumed();
-        //displaying the calories burned
-        this._displayCaloriesBurned();
-        //displaying remaining calorie count
-        this._displayCaloriesRemaining();
-        //displaying progress bar
-        this._displayCaloriesProgress();
+        //rendering all the calorie data
+        this._render();
     }
 
     // PUBLIC METHODS/API//
@@ -33,6 +23,8 @@ class CalorieTracker{
     addMeal(meal){
         this._meals.push(meal);
         this._totalCalories += meal.calories;
+        //displaying new meal item
+        this._displayNewItem("meal",meal);
         //rerendering
         this._render();
     }
@@ -43,6 +35,8 @@ class CalorieTracker{
     addWorkout(workout){
         this._workouts.push(workout);
         this._totalCalories -= (workout.calories);
+        //displaying new workout
+        this._displayNewItem("workout",workout);
         //rerendering
         this._render();
     }
@@ -118,6 +112,53 @@ class CalorieTracker{
         progressElement.style.width = `${width}%`
     }
     
+    //creates and displays meal list items on the webpage
+    _displayNewItem(type, item){
+        //grabbing the items list container
+        const itemsElement = document.getElementById(`${type}-items`);
+        //making a item div
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("card", "my-2");
+        //setting the item element's div id to item's id
+        itemElement.setAttribute("data-id", item.id);
+        
+        //creating the html item tab based on if it is a meal or workout
+        if(type === "meal"){
+            itemElement.innerHTML = 
+            `
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="mx-1">${item.name}</h4>
+                    <div class="fs-1 bg-primary text-white text-center rounded-2 px-2 px-sm-5">
+                        ${item.calories}
+                    </div>
+                    <button class="delete btn btn-danger btn-sm mx-2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            `
+        } else{
+            itemElement.innerHTML = 
+            `
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <h4 class="mx-1">${item.name}</h4>
+                  <div class="fs-1 bg-secondary text-white text-center rounded-2 px-2 px-sm-5">
+                    ${item.calories}
+                  </div>
+                  <button class="delete btn btn-danger btn-sm mx-2">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+            </div>
+            `
+        }
+
+        //appending the meal element to the list
+        itemsElement.append(itemElement);
+    }
+
     //function that rerenders the html elements whenever they have been changed
     _render(){
         //displaying the adjusted total
