@@ -88,10 +88,24 @@ class CalorieTracker{
     //function that displays how many calories remain by subtracting total calories from calorie limit
     _displayCaloriesRemaining(){
         const caloriesRemainElement = document.getElementById("calories-remaining");
-        
+        const progressElement = document.getElementById("calorie-progress");
         const remainingCalories = this._calorieLimit - this._totalCalories;
     
         caloriesRemainElement.innerHTML = remainingCalories;
+
+        //if the remaining calories is <= 0 then change the progress bar and calories 
+        //remaining to display as red instead of green, otherwise set it as green
+        if(remainingCalories <= 0){
+            caloriesRemainElement.parentElement.parentElement.classList.remove("bg-light");
+            caloriesRemainElement.parentElement.parentElement.classList.add("bg-danger");
+            progressElement.classList.remove("bg-success");
+            progressElement.classList.add("bg-danger");
+        } else{
+            caloriesRemainElement.parentElement.parentElement.classList.add("bg-light");
+            caloriesRemainElement.parentElement.parentElement.classList.remove("bg-danger");
+            progressElement.classList.add("bg-success");
+            progressElement.classList.remove("bg-danger");
+        }
     }
 
     //function that will display the progress bar and adjust it based on how many calories were consumed
@@ -103,6 +117,7 @@ class CalorieTracker{
 
         progressElement.style.width = `${width}%`
     }
+    
     //function that rerenders the html elements whenever they have been changed
     _render(){
         //displaying the adjusted total
