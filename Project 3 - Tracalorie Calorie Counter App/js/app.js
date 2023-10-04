@@ -247,7 +247,13 @@ class App {
             .addEventListener("click", this._removeItem.bind(this, "meal"));
         //listener for remove button on workout
         document.getElementById("workout-items")
-        .addEventListener("click", this._removeItem.bind(this, "workout"));
+            .addEventListener("click", this._removeItem.bind(this, "workout"));
+        //listener for meals filter input
+        document.getElementById("filter-meals")
+            .addEventListener("keyup", this._filterItems.bind(this, "meal"));
+        //listener for workout filter input
+        document.getElementById("filter-workouts")
+            .addEventListener("keyup", this._filterItems.bind(this, "workout"));
     }
 
     //new item function that gets info from the form and verifies it
@@ -261,30 +267,30 @@ class App {
         //validating input
         if(name.value === "" || calories.value === ""){
             alert(`Please enter ${type} information`);
-        }
-
-        //creating object and adding it to the tracker
-        //the + in front of the calories converts it to a number from a string
-        //no need to validate if the calories are a number since the form only allows 
-        //number inputs for that field
-        if(type === "meal"){
-            const newItem = new Meal(name.value, +calories.value);
-            this._tracker.addMeal(newItem);
         } else{
-            const newItem = new Workout(name.value, +calories.value);
-            this._tracker.addWorkout(newItem);
+            //creating object and adding it to the tracker
+            //the + in front of the calories converts it to a number from a string
+            //no need to validate if the calories are a number since the form only allows 
+            //number inputs for that field
+            if(type === "meal"){
+                const newItem = new Meal(name.value, +calories.value);
+                this._tracker.addMeal(newItem);
+            } else{
+                const newItem = new Workout(name.value, +calories.value);
+                this._tracker.addWorkout(newItem);
+            }
+
+            //resetting inputs
+            name.value = "";
+            calories.value = "";
+
+            //collapsing form menu after getting the values
+            //we can use the bootstrap.Collapse because we have the bootstrap javascript file
+            const collapse = document.getElementById(`collapse-${type}`);
+            const bsCollapse = new bootstrap.Collapse(collapse, {
+                toggle: true
+            });
         }
-
-        //resetting inputs
-        name.value = "";
-        calories.value = "";
-
-        //collapsing form menu after getting the values
-        //we can use the bootstrap.Collapse because we have the bootstrap javascript file
-        const collapse = document.getElementById(`collapse-${type}`);
-        const bsCollapse = new bootstrap.Collapse(collapse, {
-            toggle: true
-        });
     }
 
     //remove item function that removes an item from the item's list and the dom
@@ -302,6 +308,26 @@ class App {
                 e.target.closest(".card").remove();
             }
         }
+    }
+
+    //function that filters items of a meal/workout list based on user input
+    _filterItems(type, e){
+        //getting the filtering text
+        const filterText = e.target.value.toLowerCase();
+
+        //selecting all items of the type and filtering out the ones that dont match
+        document.querySelectorAll(`#${type}-items .card`).forEach((item) => {
+            //getting the item's name
+            const name = item.firstElementChild.firstElementChild.textContent.toLowerCase();
+
+            //if the text does match (not equal to -1) then we display, otherwise dont display
+            if(name.indexOf(filterText) !== -1){
+                item.style.display = "block";
+            } else{
+                console.log("In else")
+                item.style.display = "none";
+            }
+        })
     }
 }
 
