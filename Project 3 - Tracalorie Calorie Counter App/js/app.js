@@ -73,6 +73,14 @@ class CalorieTracker{
         }
     }
 
+    //reset function that resets the meals and workouts arrays as well as the total calories
+    reset(){
+        this._totalCalories = 0;
+        this._meals = [];
+        this._workouts = [];
+        this._render();
+    }
+
     //PRIVATE METHODS//
     //function that displays the calorie total by 
     //manipulating the html of the calories total element
@@ -254,6 +262,9 @@ class App {
         //listener for workout filter input
         document.getElementById("filter-workouts")
             .addEventListener("keyup", this._filterItems.bind(this, "workout"));
+        //listener for reset button
+        document.getElementById("reset")
+            .addEventListener("click", this._reset.bind(this));
     }
 
     //new item function that gets info from the form and verifies it
@@ -328,6 +339,21 @@ class App {
                 item.style.display = "none";
             }
         })
+    }
+
+    //reset function that removes all meals and workouts from each list
+    _reset(){
+
+        if(confirm("Are you sure you want to reset?")){
+            //tracker reset function
+            this._tracker.reset();
+
+            //resetting meal and workout list containters as well as the filters
+            document.getElementById("meal-items").innerHTML = "";
+            document.getElementById("workout-items").innerHTML = "";
+            document.getElementById("filter-meals").innerHTML = "";
+            document.getElementById("filter-workouts").innerHTML = "";
+        }
     }
 }
 
