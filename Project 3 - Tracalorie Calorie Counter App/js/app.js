@@ -163,31 +163,37 @@ class App {
     //constructor that instatiates a calorie tracker object and adds listeners
     constructor(){
         this._tracker = new CalorieTracker();
-        //listener for meal form, for adding meals, that calls the _newMeal function when 
-        //submitted, and binding the newMeal function to the app
-        document.getElementById("meal-form").addEventListener("submit", this._newMeal.bind(this));
+        //listener for meal form, for adding meals, that calls the _newItem with a type of meal function when 
+        //submitted, and binding the function to the app
+        document.getElementById("meal-form").addEventListener("submit", this._newItem.bind(this, "meal"));
         //listener for workouts
-        document.getElementById("workout-form").addEventListener("submit", this._newWorkout.bind(this));
+        document.getElementById("workout-form").addEventListener("submit", this._newItem.bind(this, "workout"));
     }
 
-    //new meal function that gets meals info from the form and verifies it
-    //creates new meal object and adds it to the CalorieTracker
-    _newMeal(e){
+    //new item function that gets info from the form and verifies it
+    //creates new type object and adds it to the CalorieTracker
+    //arguments come first then event object
+    _newItem(type, e){
         e.preventDefault();
-        const name = document.getElementById("meal-name");
-        const calories = document.getElementById("meal-calories");
+        const name = document.getElementById(`${type}-name`);
+        const calories = document.getElementById(`${type}-calories`);
         
         //validating input
         if(name.value === "" || calories.value === ""){
-            alert("Please enter meal information");
+            alert(`Please enter ${type} information`);
         }
 
-        //creating meal object and adding it to the tracker
+        //creating object and adding it to the tracker
         //the + in front of the calories converts it to a number from a string
         //no need to validate if the calories are a number since the form only allows 
         //number inputs for that field
-        const newMeal = new Meal(name.value, +calories.value);
-        this._tracker.addMeal(newMeal);
+        if(type === "meal"){
+            const newItem = new Meal(name.value, +calories.value);
+            this._tracker.addMeal(newItem);
+        } else{
+            const newItem = new Workout(name.value, +calories.value);
+            this._tracker.addWorkout(newItem);
+        }
 
         //resetting inputs
         name.value = "";
@@ -195,34 +201,8 @@ class App {
 
         //collapsing form menu after getting the values
         //we can use the bootstrap.Collapse because we have the bootstrap javascript file
-        const collapseMeal = document.getElementById("collapse-meal");
-        const bsCollapse = new bootstrap.Collapse(collapseMeal, {
-            toggle: true
-        });
-    }
-
-    _newWorkout(e){
-        e.preventDefault();
-        const name = document.getElementById("workout-name");
-        const caloriesBurned = document.getElementById("workout-calories");
-        
-        //validating input
-        if(name.value === "" || caloriesBurned.value === ""){
-            alert("Please enter workout information");
-        }
-
-        //creating workout object and adding it to the tracker
-        const newWorkout = new Workout(name.value, +caloriesBurned.value);
-        this._tracker.addWorkout(newWorkout);
-
-        //resetting inputs
-        name.value = "";
-        caloriesBurned.value = "";
-
-        //collapsing form menu after getting the values
-        //we can use the bootstrap.Collapse because we have the bootstrap javascript file
-        const collapseWorkout = document.getElementById("collapse-workout");
-        const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+        const collapse = document.getElementById(`collapse-${type}`);
+        const bsCollapse = new bootstrap.Collapse(collapse, {
             toggle: true
         });
     }
