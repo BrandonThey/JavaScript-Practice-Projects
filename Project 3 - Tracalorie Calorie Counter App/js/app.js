@@ -40,8 +40,39 @@ class CalorieTracker{
         //rerendering
         this._render();
     }
-
     
+    //remove meal function that removes a meal from the meals list using its id
+    //and remove its calorie count from the total calories
+    removeMeal(id){
+        //finding the item based on id from the meals list
+        const index = this._meals.findIndex((meal) => meal.id === id)
+
+        //if we the item was found we can delete it
+        if(index !== -1){
+            const meal = this._meals[index];
+            this._totalCalories -= meal.calories;
+            //splice the element out of the array
+            this._meals.splice(index, 1);
+            this._render()
+        }
+    }
+    
+    //remove workout function that removes a workout from the workoutss list using its id
+    //and adding its calorie count tp the total calories
+    removeWorkout(id){
+        //finding the item based on id from the meals list
+        const index = this._workouts.findIndex((workout) => workout.id === id)
+
+        //if we the item was found we can delete it
+        if(index !== -1){
+            const workout = this._workouts[index];
+            this._totalCalories += workout.calories;
+            //splice the element out of the array
+            this._workouts.splice(index, 1);
+            this._render()
+        }
+    }
+
     //PRIVATE METHODS//
     //function that displays the calorie total by 
     //manipulating the html of the calories total element
@@ -206,9 +237,17 @@ class App {
         this._tracker = new CalorieTracker();
         //listener for meal form, for adding meals, that calls the _newItem with a type of meal function when 
         //submitted, and binding the function to the app
-        document.getElementById("meal-form").addEventListener("submit", this._newItem.bind(this, "meal"));
+        document.getElementById("meal-form")
+            .addEventListener("submit", this._newItem.bind(this, "meal"));
         //listener for workouts
-        document.getElementById("workout-form").addEventListener("submit", this._newItem.bind(this, "workout"));
+        document.getElementById("workout-form")
+            .addEventListener("submit", this._newItem.bind(this, "workout"));
+        //listener for remove button on meals
+        document.getElementById("meal-items")
+            .addEventListener("click", this._removeItem.bind(this, "meal"));
+        //listener for remove button on workout
+        document.getElementById("workout-items")
+        .addEventListener("click", this._removeItem.bind(this, "workout"));
     }
 
     //new item function that gets info from the form and verifies it
@@ -246,6 +285,23 @@ class App {
         const bsCollapse = new bootstrap.Collapse(collapse, {
             toggle: true
         });
+    }
+
+    //remove item function that removes an item from the item's list and the dom
+    _removeItem(type, e){
+        //checking to see if the delete/x mark button was clicked and if it was then delete the item
+        if(e.target.classList.contains("delete") || e.target.classList.contains("fa-xmark")){
+            if(confirm("Did you want to delete this item?")){
+                //getting the id of the card closest to the event target
+                const id = e.target.closest(".card").getAttribute("data-id");
+
+                //checking if it was a meal or workout and removing it from the tracker
+                type === "meal" 
+                    ? this._tracker.removeMeal(id)
+                    : this._tracker.removeWorkout(id);
+                e.target.closest(".card").remove();
+            }
+        }
     }
 }
 
