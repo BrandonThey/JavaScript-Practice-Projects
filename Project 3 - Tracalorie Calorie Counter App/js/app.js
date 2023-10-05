@@ -81,6 +81,14 @@ class CalorieTracker{
         this._render();
     }
 
+    //set limit function that updates the calorieLimit of the tracker to a new
+    //user entered limit
+    setLimit(newLimit){
+        this._calorieLimit = newLimit;
+        this._displayCaloriesLimit();
+        this._render();
+    }
+
     //PRIVATE METHODS//
     //function that displays the calorie total by 
     //manipulating the html of the calories total element
@@ -265,6 +273,9 @@ class App {
         //listener for reset button
         document.getElementById("reset")
             .addEventListener("click", this._reset.bind(this));
+        //listener for set daily limit button
+        document.getElementById("limit-form")
+            .addEventListener("submit", this._setLimit.bind(this));
     }
 
     //new item function that gets info from the form and verifies it
@@ -278,30 +289,30 @@ class App {
         //validating input
         if(name.value === "" || calories.value === ""){
             alert(`Please enter ${type} information`);
-        } else{
-            //creating object and adding it to the tracker
-            //the + in front of the calories converts it to a number from a string
-            //no need to validate if the calories are a number since the form only allows 
-            //number inputs for that field
-            if(type === "meal"){
-                const newItem = new Meal(name.value, +calories.value);
-                this._tracker.addMeal(newItem);
-            } else{
-                const newItem = new Workout(name.value, +calories.value);
-                this._tracker.addWorkout(newItem);
-            }
-
-            //resetting inputs
-            name.value = "";
-            calories.value = "";
-
-            //collapsing form menu after getting the values
-            //we can use the bootstrap.Collapse because we have the bootstrap javascript file
-            const collapse = document.getElementById(`collapse-${type}`);
-            const bsCollapse = new bootstrap.Collapse(collapse, {
-                toggle: true
-            });
+            return;
         }
+        //creating object and adding it to the tracker
+        //the + in front of the calories converts it to a number from a string
+        //no need to validate if the calories are a number since the form only allows 
+        //number inputs for that field
+        if(type === "meal"){
+            const newItem = new Meal(name.value, +calories.value);
+            this._tracker.addMeal(newItem);
+        } else{
+            const newItem = new Workout(name.value, +calories.value);
+            this._tracker.addWorkout(newItem);
+        }
+
+        //resetting inputs
+        name.value = "";
+        calories.value = "";
+
+        //collapsing form menu after getting the values
+        //we can use the bootstrap.Collapse because we have the bootstrap javascript file
+        const collapse = document.getElementById(`collapse-${type}`);
+        const bsCollapse = new bootstrap.Collapse(collapse, {
+            toggle: true
+        });
     }
 
     //remove item function that removes an item from the item's list and the dom
@@ -354,6 +365,29 @@ class App {
             document.getElementById("filter-meals").innerHTML = "";
             document.getElementById("filter-workouts").innerHTML = "";
         }
+    }
+
+    //set limit function that changes the daily caloric limit for the tracker
+    _setLimit(e){
+        e.preventDefault();
+
+        //getting the user inputted limit element
+        const limit = document.getElementById("limit")
+        
+        //if the user hasnt entered a new limit send an alert 
+        if(limit.value === ""){
+            alert("Please add a limit");
+            return;
+        }
+
+        //setting the new limit
+        this._tracker.setLimit(+limit.value);
+        limit.value = "";
+
+        //similar to closing a collapsable form, we close the modal form after submittion
+        const modalElement = document.getElementById("limit-modal");
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
     }
 }
 
