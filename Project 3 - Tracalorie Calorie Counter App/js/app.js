@@ -65,6 +65,8 @@ class CalorieTracker{
             Storage.setTotalCalories(this._totalCalories);
             //splice the element out of the array
             this._meals.splice(index, 1);
+            //removing element from local storage
+            Storage.removeItem(id, "meals");
             this._render()
         }
     }
@@ -83,6 +85,8 @@ class CalorieTracker{
             Storage.setTotalCalories(this._totalCalories);
             //splice the element out of the array
             this._workouts.splice(index, 1);
+            //removing element from local storage
+            Storage.removeItem(id, "workouts");
             this._render()
         }
     }
@@ -329,6 +333,22 @@ class Storage{
         console.log(items)
         items.push(newItems);
         //stringify the array into a json string
+        localStorage.setItem(`${type}`, JSON.stringify(items))
+    }
+
+    //function that removes an item (meal or workout) using its id from local storage
+    static removeItem(id, type){
+        //getting the items array
+        const items = Storage.getItems(type);
+
+        //removing item similar to that of removing from the tracker
+        items.forEach((item, index) => {
+            if(item.id === id){
+                items.splice(index, 1)
+            }
+        });
+
+        //restoring the new array with the item spliced out
         localStorage.setItem(`${type}`, JSON.stringify(items))
     }
 }
