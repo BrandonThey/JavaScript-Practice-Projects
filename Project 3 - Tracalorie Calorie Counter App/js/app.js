@@ -5,7 +5,8 @@ class CalorieTracker{
     //default constructor that initializes vars 
     constructor(){
         //calorie limit is the calorie goal the user can set but is default 2000
-        this._calorieLimit = 2000;
+        //taken from the local storage
+        this._calorieLimit = Storage.getCalorieLimit();
         //totalCalories are the total calories accumated after adding meals and workouts
         this._totalCalories = 0;
         //arrays to contains lists of meals and workouts
@@ -13,6 +14,7 @@ class CalorieTracker{
         this._workouts = [];
 
         //rendering all the calorie data
+        this._displayCaloriesLimit();
         this._render();
     }
 
@@ -85,6 +87,8 @@ class CalorieTracker{
     //user entered limit
     setLimit(newLimit){
         this._calorieLimit = newLimit;
+        //locally storing the new calorie limit
+        Storage.setCalorieLimit(newLimit);
         this._displayCaloriesLimit();
         this._render();
     }
@@ -245,6 +249,37 @@ class Workout {
     }
 }
 
+//Storage class that stores the tracker data into local web storage
+class Storage{
+    //all methods in the storage class will be static since we dont need 
+    //multiple instances of storages
+
+    //function that retrieve the calorie limit from local storage and returns it
+    //default limit is set at 2000
+    static getCalorieLimit(defaultLimit = 2000){
+
+        //calorieLimit variable that will be returned after retrieving the limit from 
+        //storage
+        let calorieLimit;
+        
+        //if we dont have a calorie limit set in storage yet and is null, 
+        //then set it to default of 2000
+        //else get the limit from local storage
+        if(localStorage.getItem("calorieLimit") == null){
+            calorieLimit = defaultLimit
+        } else{
+            calorieLimit = +localStorage.getItem("calorieLimit");
+        }
+        return calorieLimit;
+    }
+
+    //function that stores a new calorie limit into local storage
+    static setCalorieLimit(calorieLimit){
+        localStorage.setItem("calorieLimit", calorieLimit);
+    }
+
+}
+
 //App class that acts as a driver object for the application
 class App {
 
@@ -375,8 +410,8 @@ class App {
         const limit = document.getElementById("limit")
         
         //if the user hasnt entered a new limit send an alert 
-        if(limit.value === ""){
-            alert("Please add a limit");
+        if(limit.value === "" || isNaN(+limit.value)){
+            alert("Please add a valid limit");
             return;
         }
 
