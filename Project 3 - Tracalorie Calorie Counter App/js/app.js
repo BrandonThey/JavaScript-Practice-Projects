@@ -10,8 +10,8 @@ class CalorieTracker{
         //totalCalories are the total calories accumated after adding meals and workouts
         this._totalCalories = Storage.getTotalCalories();
         //arrays to contains lists of meals and workouts
-        this._meals = [];
-        this._workouts = [];
+        this._meals = Storage.getItems("meals");
+        this._workouts = Storage.getItems("workouts");
 
         //rendering all the calorie data
         this._displayCaloriesLimit();
@@ -27,6 +27,8 @@ class CalorieTracker{
         this._totalCalories += meal.calories;
         //storing the totalCalories
         Storage.setTotalCalories(this._totalCalories);
+        //storing the array of meals
+        Storage.saveItem(meal, "meals")
         //displaying new meal item
         this._displayNewItem("meal",meal);
         //rerendering
@@ -41,6 +43,8 @@ class CalorieTracker{
         this._totalCalories -= (workout.calories);
         //storing the totalCalories
         Storage.setTotalCalories(this._totalCalories);
+        //storing the array of meals
+        Storage.saveItem(workout, "workouts")
         //displaying new workout
         this._displayNewItem("workout",workout);
         //rerendering
@@ -99,6 +103,12 @@ class CalorieTracker{
         Storage.setCalorieLimit(newLimit);
         this._displayCaloriesLimit();
         this._render();
+    }
+
+    //function that loads items from local storage onto the dom on page start up
+    loadItems(){
+        this._meals.forEach(meal => this._displayNewItem("meal",meal));
+        this._workouts.forEach(workout => this._displayNewItem("workout",workout));
     }
 
     //PRIVATE METHODS//
@@ -287,7 +297,6 @@ class Storage{
     //function that gets the total calories accumulated from the meals and workouts
     static getTotalCalories(defaultTotal = 0){
         let totalCalories;
-
         if(localStorage.getItem("totalCalories") == null){
             totalCalories = defaultTotal
         } else{
@@ -301,14 +310,26 @@ class Storage{
         localStorage.setItem("totalCalories", totalCalories);
     }
 
-    //function gets the array of meals from storage
-    static getMeals(){
-
+    //function gets the array of items(meals or workouts) from storage
+    static getItems(type){
+        let items;
+        if(localStorage.getItem(`${type}`) == null){
+            items = [];
+        } else{
+            //parsing the json string into an array
+            items = JSON.parse(localStorage.getItem(`${type}`));
+        }
+        return items;
     }
-    
-    //function that stores the array of meals
-    static setMeals(){
 
+    //function that pushes a new item (meal or workout) into the stored array of said item
+    static saveItem(newItems, type){
+        //getting the current local storage of meals
+        const items = Storage.getItems(`${type}`);
+        console.log(items)
+        items.push(newItems);
+        //stringify the array into a json string
+        localStorage.setItem(`${type}`, JSON.stringify(items))
     }
 }
 
@@ -343,6 +364,9 @@ class App {
         //listener for set daily limit button
         document.getElementById("limit-form")
             .addEventListener("submit", this._setLimit.bind(this));
+
+        //loading items from storage onto the dom
+        this._tracker.loadItems();
     }
 
     //new item function that gets info from the form and verifies it
