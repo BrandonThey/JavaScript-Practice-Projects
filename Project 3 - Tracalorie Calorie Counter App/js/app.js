@@ -8,7 +8,7 @@ class CalorieTracker{
         //taken from the local storage
         this._calorieLimit = Storage.getCalorieLimit();
         //totalCalories are the total calories accumated after adding meals and workouts
-        this._totalCalories = 0;
+        this._totalCalories = Storage.getTotalCalories();
         //arrays to contains lists of meals and workouts
         this._meals = [];
         this._workouts = [];
@@ -25,6 +25,8 @@ class CalorieTracker{
     addMeal(meal){
         this._meals.push(meal);
         this._totalCalories += meal.calories;
+        //storing the totalCalories
+        Storage.setTotalCalories(this._totalCalories);
         //displaying new meal item
         this._displayNewItem("meal",meal);
         //rerendering
@@ -37,6 +39,8 @@ class CalorieTracker{
     addWorkout(workout){
         this._workouts.push(workout);
         this._totalCalories -= (workout.calories);
+        //storing the totalCalories
+        Storage.setTotalCalories(this._totalCalories);
         //displaying new workout
         this._displayNewItem("workout",workout);
         //rerendering
@@ -53,6 +57,8 @@ class CalorieTracker{
         if(index !== -1){
             const meal = this._meals[index];
             this._totalCalories -= meal.calories;
+            //storing the totalCalories
+            Storage.setTotalCalories(this._totalCalories);
             //splice the element out of the array
             this._meals.splice(index, 1);
             this._render()
@@ -69,6 +75,8 @@ class CalorieTracker{
         if(index !== -1){
             const workout = this._workouts[index];
             this._totalCalories += workout.calories;
+            //storing the totalCalories
+            Storage.setTotalCalories(this._totalCalories);
             //splice the element out of the array
             this._workouts.splice(index, 1);
             this._render()
@@ -257,11 +265,9 @@ class Storage{
     //function that retrieve the calorie limit from local storage and returns it
     //default limit is set at 2000
     static getCalorieLimit(defaultLimit = 2000){
-
         //calorieLimit variable that will be returned after retrieving the limit from 
         //storage
         let calorieLimit;
-        
         //if we dont have a calorie limit set in storage yet and is null, 
         //then set it to default of 2000
         //else get the limit from local storage
@@ -278,6 +284,32 @@ class Storage{
         localStorage.setItem("calorieLimit", calorieLimit);
     }
 
+    //function that gets the total calories accumulated from the meals and workouts
+    static getTotalCalories(defaultTotal = 0){
+        let totalCalories;
+
+        if(localStorage.getItem("totalCalories") == null){
+            totalCalories = defaultTotal
+        } else{
+            totalCalories = +localStorage.getItem("totalCalories");
+        }
+        return totalCalories;
+    }
+
+    //function that stores a new total calories accumulated from the meals and workouts
+    static setTotalCalories(totalCalories){
+        localStorage.setItem("totalCalories", totalCalories);
+    }
+
+    //function gets the array of meals from storage
+    static getMeals(){
+
+    }
+    
+    //function that stores the array of meals
+    static setMeals(){
+
+    }
 }
 
 //App class that acts as a driver object for the application
