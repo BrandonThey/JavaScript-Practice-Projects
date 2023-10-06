@@ -339,10 +339,17 @@ class App {
     //constructor that instatiates a calorie tracker object and adds listeners
     constructor(){
         this._tracker = new CalorieTracker();
+        //function that loads all the event listeners
+        this._loadEventListeners();
+        //loading items from storage onto the dom
+        this._tracker.loadItems();
+    }
+
+    _loadEventListeners(){
         //listener for meal form, for adding meals, that calls the _newItem with a type of meal function when 
         //submitted, and binding the function to the app
         document.getElementById("meal-form")
-            .addEventListener("submit", this._newItem.bind(this, "meal"));
+        .addEventListener("submit", this._newItem.bind(this, "meal"));
         //listener for workouts
         document.getElementById("workout-form")
             .addEventListener("submit", this._newItem.bind(this, "workout"));
@@ -364,11 +371,7 @@ class App {
         //listener for set daily limit button
         document.getElementById("limit-form")
             .addEventListener("submit", this._setLimit.bind(this));
-
-        //loading items from storage onto the dom
-        this._tracker.loadItems();
     }
-
     //new item function that gets info from the form and verifies it
     //creates new type object and adds it to the CalorieTracker
     //arguments come first then event object
