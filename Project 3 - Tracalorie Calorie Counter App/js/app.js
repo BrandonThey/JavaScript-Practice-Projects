@@ -16,6 +16,7 @@ class CalorieTracker{
         //rendering all the calorie data
         this._displayCaloriesLimit();
         this._render();
+
     }
 
     // PUBLIC METHODS/API//
@@ -96,6 +97,7 @@ class CalorieTracker{
         this._totalCalories = 0;
         this._meals = [];
         this._workouts = [];
+        Storage.clearAll();
         this._render();
     }
 
@@ -350,6 +352,16 @@ class Storage{
 
         //restoring the new array with the item spliced out
         localStorage.setItem(`${type}`, JSON.stringify(items))
+    }
+
+    //function that clears all data from storage
+    static clearAll(){
+        //we dont want to clear the user defined calorie limit so we want to
+        //hold the value to add back into storage after clearing
+        //if we want to reset the calorie limit as well we can skip this step
+        const calorieLimit = Storage.getCalorieLimit();
+        localStorage.clear();
+        Storage.setCalorieLimit(calorieLimit);
     }
 }
 
