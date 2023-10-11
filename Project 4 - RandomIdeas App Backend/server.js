@@ -40,5 +40,20 @@ app.get("/api/ideas", (request, response) => {
     response.json({success: true, data: ideas});
 })
 
+//defining a get route for specific ideas based on their ids
+//uses a query param to get the id from the get request
+app.get("/api/ideas/:id", (request, response) => {
+    //finding the idea
+    const idea = ideas.find((idea) => idea.id === +request.params.id)
+    
+    //testing to see if we found the idea
+    if(idea){
+        //responding with a successful request and the specific idea
+        response.json({success: true, data: idea});
+    } else{
+        //sending a not found status and an error response 
+        response.status(404).json({success: false, error: "Idea not found"})
+    }
+})
 //listening for any requests on our port
 app.listen(port, () => console.log("Listening on port " + port));
