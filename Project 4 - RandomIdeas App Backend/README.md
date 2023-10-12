@@ -1,0 +1,1 @@
+A two part javascript project that will create a web application that allows the user to post random ideas for various projects and view those ideas. This back end of the project utilizes an express api to be used by the front end and a NodeJS enviroment to host the api. All ideas and their data are hosted on MongoDB's Atlas
