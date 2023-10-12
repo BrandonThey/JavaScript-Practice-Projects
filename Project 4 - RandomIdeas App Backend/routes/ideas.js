@@ -56,7 +56,7 @@ router.post("/", async (request, response) => {
 //put request to update an idea's text or tag based on their id
 router.put("/:id", async(request, response) => {
     try {
-        //finding the idea by id and sending it as a response
+        //finding the idea by id and updating it
         const updatedIdea = await Idea.findByIdAndUpdate(
             request.params.id,
             {
@@ -76,19 +76,14 @@ router.put("/:id", async(request, response) => {
 })
 
 //delete request to delete a specific idea based on their id
-router.delete("/:id", (request, response) => {
-    //finding the idea and its index
-    const idea = ideas.find((idea) => idea.id === +request.params.id)
-    //testing to see if we found the idea
-    if(idea){
-        //getting the index of the found idea
-        const index = ideas.indexOf(idea);
-        //deleting the data by splicing it out of the ideas array
-        ideas.splice(index, 1);
+router.delete("/:id", async (request, response) => {
+    try {
+        await Idea.findByIdAndDelete(request.params.id)
         response.json({success: true, data: {}});
-    } else{
-        //sending a not found status and an error response 
-        response.status(404).json({success: false, error: "Idea not found"})
+    } catch (error) {
+        //returning an error if finding/deleting data was unsuccessful
+        console.log(error);
+        res.status(500).json({success: false, error: "Could not delete idea"})
     }
 })
 //exporting routes
