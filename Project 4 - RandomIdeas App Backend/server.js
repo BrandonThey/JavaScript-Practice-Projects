@@ -1,6 +1,9 @@
 //bringing in express and defining our port
 const express = require("express");
-const port = 5000;
+
+//importing the env file and using its preset port
+require("dotenv").config();
+const port = process.env.port || 5000;
 
 //setting our app to be express
 const app = express();
