@@ -12,6 +12,7 @@ router.get("/", async (request, response) => {
         response.json({success: true, data: ideas})
     } catch (error) {
         //returning an error if finding data was unsuccessful
+        console.log(error);
         res.status(500).json({success: false, error: "Something went wrong"})
     }
 })
@@ -33,26 +34,25 @@ router.get("/:id", (request, response) => {
 })
 
 //post requesting to add a new idea
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
     //defining idea object to gather data from user and post
     //to database
-    const idea = {
-        //auto incrementing id that uses the length of ideas
-        id: ideas.length + 1,
+    const idea = new Idea({
         text: request.body.text,
         tag: request.body.tag,
         //usually we would authenticate username but we will
         //not here
         username: request.body.username,
-        //getting the date the idea was created and slicing out the time
-        date: new Date().toISOString().slice(0,10)
+    })
+
+    try {
+        const savedIdea = await idea.save();
+        response.json({success: true, data: savedIdea});
+    } catch (error) {
+        //respone if saving the idea was unsuccessful
+        console.log(error);
+        response.status(500).json({success: false, error: "Could not save idea"})
     }
-
-    //pushing the new idea into the array
-    ideas.push(idea);
-
-
-    response.json({success: true, data: idea});
 })
 
 //put request to update an idea's text or tag based on their id
