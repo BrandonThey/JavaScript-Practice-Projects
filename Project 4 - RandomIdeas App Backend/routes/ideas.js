@@ -1,32 +1,19 @@
 const express = require("express");
-
 //creating an express router
 const router = express.Router();
-
-//some placeholder idea data (array of idea objects) 
-//to be sent back as a response to
-//the api/ideas route
-const ideas = [
-    {
-        id: 1,
-        text: "Some text here",
-        tag: "Tech",
-        username: "BThey",
-        date: "2023-01-01"
-    },
-    {
-        id: 2,
-        text: "Some other text here",
-        tag: "Marketing",
-        username: "JasonB",
-        date: "2023-03-04"
-    }
-]
+//importing the Idea schema
+const Idea = require("../models/Idea.js");
 
 //defining a get route for the api's saved ideas 
-router.get("/", (request, response) => {
-    //responding with a successful request and the ideas data
-    response.json({success: true, data: ideas});
+router.get("/", async (request, response) => {
+    try {
+        //trying to get the ideas from the database
+        const ideas = await Idea.find();
+        response.json({success: true, data: ideas})
+    } catch (error) {
+        //returning an error if finding data was unsuccessful
+        res.status(500).json({success: false, error: "Something went wrong"})
+    }
 })
 
 //defining a get route for specific ideas based on their ids
