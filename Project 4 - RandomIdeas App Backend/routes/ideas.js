@@ -68,5 +68,38 @@ router.post("/", (request, response) => {
     response.json({success: true, data: idea});
 })
 
+//put request to update an idea's text or tag based on their id
+router.put("/:id", (request, response) => {
+    //finding the idea
+    const idea = ideas.find((idea) => idea.id === +request.params.id)
+    //testing to see if we found the idea
+    if(idea){
+        //updating the data, or if there was no new data keep the previous values
+        idea.text = request.body.text || idea.text;
+        idea.tag = request.body.tag || idea.tag;
+        response.json({success: true, data: idea});
+    } else{
+        //sending a not found status and an error response 
+        response.status(404).json({success: false, error: "Idea not found"})
+    }
+})
+
+//delete request to delete a specific idea based on their id
+router.delete("/:id", (request, response) => {
+    //finding the idea and its index
+    const idea = ideas.find((idea) => idea.id === +request.params.id)
+    //testing to see if we found the idea
+    if(idea){
+        //getting the index of the found idea
+        const index = ideas.indexOf(idea);
+        //deleting the data by splicing it out of the ideas array
+        ideas.splice(index, 1);
+        response.json({success: true, data: {}});
+    } else{
+        //sending a not found status and an error response 
+        response.status(404).json({success: false, error: "Idea not found"})
+    }
+})
 //exporting routes
 module.exports = router;
+
