@@ -57,15 +57,21 @@ router.post("/", async (request, response) => {
 router.put("/:id", async(request, response) => {
     try {
         //finding the idea by id and sending it as a response
-        const idea = await Idea.findById(request.params.id);
-        idea.text = request.body.text || idea.text;
-        idea.tag = request.body.tag || idea.tag;
-        const savedIdea = await idea.save();
-        response.json({success: true, data: savedIdea});
+        const updatedIdea = await Idea.findByIdAndUpdate(
+            request.params.id,
+            {
+                $set:{
+                    text: request.body.text,
+                    tag: request.body.tag,
+                }
+            },
+            {new: true}
+            );
+        response.json({success: true, data: updatedIdea});
     } catch (error) {
-        //returning an error if finding data was unsuccessful
+        //returning an error if finding/updating data was unsuccessful
         console.log(error);
-        res.status(500).json({success: false, error: "Could not save idea"})
+        res.status(500).json({success: false, error: "Could not update idea"})
     }
 })
 
