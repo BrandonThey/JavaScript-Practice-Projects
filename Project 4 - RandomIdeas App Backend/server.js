@@ -5,6 +5,11 @@ const port = 5000;
 //setting our app to be express
 const app = express();
 
+//body parser middleware to parse post requests
+//express.json to allow us to post raw json
+app.use(express.json());
+app.use(express.urlencoded({extended: false}))
+
 //defining a get route for the index
 app.get("/", (request, response) => {
     //currently when some sends a get request for the index

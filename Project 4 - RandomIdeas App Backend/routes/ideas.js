@@ -45,5 +45,28 @@ router.get("/:id", (request, response) => {
     }
 })
 
+//post requesting to add a new idea
+router.post("/", (request, response) => {
+    //defining idea object to gather data from user and post
+    //to database
+    const idea = {
+        //auto incrementing id that uses the length of ideas
+        id: ideas.length + 1,
+        text: request.body.text,
+        tag: request.body.tag,
+        //usually we would authenticate username but we will
+        //not here
+        username: request.body.username,
+        //getting the date the idea was created and slicing out the time
+        date: new Date().toISOString().slice(0,10)
+    }
+
+    //pushing the new idea into the array
+    ideas.push(idea);
+
+
+    response.json({success: true, data: idea});
+})
+
 //exporting routes
 module.exports = router;
