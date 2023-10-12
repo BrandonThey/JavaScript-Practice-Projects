@@ -19,17 +19,15 @@ router.get("/", async (request, response) => {
 
 //defining a get route for specific ideas based on their ids
 //uses a query param to get the id from the get request
-router.get("/:id", (request, response) => {
-    //finding the idea
-    const idea = ideas.find((idea) => idea.id === +request.params.id)
-    
-    //testing to see if we found the idea
-    if(idea){
-        //responding with a successful request and the specific idea
-        response.json({success: true, data: idea});
-    } else{
-        //sending a not found status and an error response 
-        response.status(404).json({success: false, error: "Idea not found"})
+router.get("/:id", async (request, response) => {
+    try {
+        //finding the idea by id and sending it as a response
+        const idea = await Idea.findById(request.params.id);
+        response.json({success: true, data: idea})
+    } catch (error) {
+        //returning an error if finding data was unsuccessful
+        console.log(error);
+        res.status(500).json({success: false, error: "Could not find idea"})
     }
 })
 
@@ -56,18 +54,18 @@ router.post("/", async (request, response) => {
 })
 
 //put request to update an idea's text or tag based on their id
-router.put("/:id", (request, response) => {
-    //finding the idea
-    const idea = ideas.find((idea) => idea.id === +request.params.id)
-    //testing to see if we found the idea
-    if(idea){
-        //updating the data, or if there was no new data keep the previous values
+router.put("/:id", async(request, response) => {
+    try {
+        //finding the idea by id and sending it as a response
+        const idea = await Idea.findById(request.params.id);
         idea.text = request.body.text || idea.text;
         idea.tag = request.body.tag || idea.tag;
-        response.json({success: true, data: idea});
-    } else{
-        //sending a not found status and an error response 
-        response.status(404).json({success: false, error: "Idea not found"})
+        const savedIdea = await idea.save();
+        response.json({success: true, data: savedIdea});
+    } catch (error) {
+        //returning an error if finding data was unsuccessful
+        console.log(error);
+        res.status(500).json({success: false, error: "Could not save idea"})
     }
 })
 
