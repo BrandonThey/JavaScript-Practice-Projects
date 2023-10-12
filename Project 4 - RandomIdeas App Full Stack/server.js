@@ -10,6 +10,9 @@ connectDB();
 //setting our app to be express
 const app = express();
 
+//making our public folder a static folder
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")));
 //body parser middleware to parse post requests
 //express.json to allow us to post raw json
 app.use(express.json());
