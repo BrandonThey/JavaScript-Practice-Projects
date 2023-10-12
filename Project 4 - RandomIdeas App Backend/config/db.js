@@ -8,4 +8,5 @@ const connectDB = async () =>{
     console.log("MongoDB Connected " + connect.connection.host);
 }
 
+mongoose.set("strictQuery", true);
 module.exports = connectDB;

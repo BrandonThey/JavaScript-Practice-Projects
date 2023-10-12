@@ -4,7 +4,9 @@ const express = require("express");
 //importing the env file and using its preset port
 require("dotenv").config();
 const port = process.env.port || 5000;
-
+//importing connectDB and calling it to connect to the db
+const connectDB = require("./config/db.js")
+connectDB();
 //setting our app to be express
 const app = express();
 
